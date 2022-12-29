@@ -9,33 +9,50 @@ import (
 	"testing"
 )
 
-func AddExpression(t *testing.T, expr *api.Expression) {
-	code, err := PostData("http://localhost:8000/engine/expr", MakeJsonString(expr))
+func AddEngine(t *testing.T, engineName string) {
+	url := fmt.Sprintf("http://localhost:8000/engine?engine=%s", engineName)
+	code, err := PostData(url, "")
 	assert.Equal(t, http.StatusOK, code)
 	assert.Nil(t, err)
 }
-
-func DeleteExpression(t *testing.T, Name string) {
-	url := fmt.Sprintf("http://localhost:8000/engine/expr?name=%s", Name)
+func DeleteEngine(t *testing.T, engineName string) {
+	url := fmt.Sprintf("http://localhost:8000/engine?engine=%s", engineName)
 	code, err := Delete(url)
 	assert.Equal(t, http.StatusOK, code)
 	assert.Nil(t, err)
 }
 
-func Evaluate(t *testing.T) {
-	code, err := PostData("http://localhost:8000/engine/evaluate", "")
+func AddExpression(t *testing.T, engineName string, expr *api.Expression) {
+	url := fmt.Sprintf("http://localhost:8000/engine/expr?engine=%s", engineName)
+	code, err := PostData(url, MakeJsonString(expr))
 	assert.Equal(t, http.StatusOK, code)
 	assert.Nil(t, err)
 }
 
-func ClearEngine(t *testing.T) {
-	code, err := PostData("http://localhost:8000/engine/clear", "")
+func DeleteExpression(t *testing.T, engineName string, Name string) {
+	url := fmt.Sprintf("http://localhost:8000/engine/expr?name=%s&engine=%s", Name, engineName)
+	code, err := Delete(url)
 	assert.Equal(t, http.StatusOK, code)
 	assert.Nil(t, err)
 }
 
-func FetchResult(t *testing.T) map[string]string {
-	body, code, err := Get("http://localhost:8000/engine/result")
+func Evaluate(t *testing.T, engineName string) {
+	url := fmt.Sprintf("http://localhost:8000/engine/evaluate?engine=%s", engineName)
+	code, err := PostData(url, "")
+	assert.Equal(t, http.StatusOK, code)
+	assert.Nil(t, err)
+}
+
+func ClearEngine(t *testing.T, engineName string) {
+	url := fmt.Sprintf("http://localhost:8000/engine/clear?engine=%s", engineName)
+	code, err := PostData(url, "")
+	assert.Equal(t, http.StatusOK, code)
+	assert.Nil(t, err)
+}
+
+func FetchResult(t *testing.T, engineName string) map[string]string {
+	url := fmt.Sprintf("http://localhost:8000/engine/result?engine=%s", engineName)
+	body, code, err := Get(url)
 	assert.Equal(t, http.StatusOK, code)
 	assert.Nil(t, err)
 
@@ -46,6 +63,3 @@ func FetchResult(t *testing.T) map[string]string {
 
 	return resultMap
 }
-
-
-

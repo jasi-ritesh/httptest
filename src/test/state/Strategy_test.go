@@ -7,25 +7,38 @@ import (
 func TestArithematicStrategyEngine(t *testing.T) {
 
 	data := GetFactoryData(Arithematic)
-	se := StateMachineEngine{t: t, data: data}
+	se := StateMachineEngine{t: t, engineName: "Arithematic", data: data}
 	se.RunStrategy()
 }
 
 func TestComparisonStrategyEngine(t *testing.T) {
 
 	data := GetFactoryData(Comparison)
-	se := StateMachineEngine{t: t, data: data}
+	se := StateMachineEngine{t: t, engineName: "Comparison", data: data}
 	se.RunStrategy()
 }
 
 func TestStateMachineEngine_Concatenation(t *testing.T) {
 	data := GetFactoryData(Concatenation)
-	se := StateMachineEngine{t: t, data: data}
+	se := StateMachineEngine{t: t, engineName: "Concatenation", data: data}
 	se.RunStrategy()
 
 }
 func TestGetCombineSliceData(t *testing.T) {
 	data := GetFactoryData(Combineslice)
-	se := StateMachineEngine{t: t, data: data}
+	se := StateMachineEngine{t: t, engineName: "Combineslice", data: data}
 	se.RunStrategy()
+}
+
+func TestConcurrentStateMachineEngine_RunStrategy(t *testing.T) {
+
+	cse := ConcurrentStateMachineEngine{engines: []*StateMachineEngine{
+		&StateMachineEngine{t: t, engineName: "Arithematic", data: GetFactoryData(Arithematic)},
+		&StateMachineEngine{t: t, engineName: "Comparison", data: GetFactoryData(Comparison)},
+		&StateMachineEngine{t: t, engineName: "Concatenation", data: GetFactoryData(Concatenation)},
+		&StateMachineEngine{t: t, engineName: "Combineslice", data: GetFactoryData(Combineslice)},
+	}}
+
+	cse.RunStrategy()
+
 }

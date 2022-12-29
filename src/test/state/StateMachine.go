@@ -14,6 +14,8 @@ type ExpressionData struct {
 }
 
 type StateMachineInterface interface {
+	addEngine()
+	deleteEngine()
 	addExpression()
 	evaluate()
 	validate()
@@ -22,22 +24,30 @@ type StateMachineInterface interface {
 }
 
 type StateMachineEngine struct {
-	t    *testing.T ``
-	data *ExpressionData
+	engineName string
+	t          *testing.T ``
+	data       *ExpressionData
 }
 
+func (s *StateMachineEngine) addEngine() {
+	test.AddEngine(s.t, s.engineName)
+}
+
+func (s *StateMachineEngine) deleteEngine() {
+	test.DeleteEngine(s.t, s.engineName)
+}
 func (s *StateMachineEngine) addExpression() {
 	for name, expr := range s.data.InputMap {
-		test.AddExpression(s.t, &api.Expression{Name: name, Expr: expr})
+		test.AddExpression(s.t, s.engineName, &api.Expression{Name: name, Expr: expr})
 	}
 }
 
 func (s *StateMachineEngine) evaluate() {
-	test.Evaluate(s.t)
+	test.Evaluate(s.t, s.engineName)
 }
 
 func (s *StateMachineEngine) validate() {
-	resultMap := test.FetchResult(s.t)
+	resultMap := test.FetchResult(s.t, s.engineName)
 
 	//Stage-4
 	//Validate the Result
@@ -54,28 +64,27 @@ func (s *StateMachineEngine) validate() {
 
 func (s *StateMachineEngine) delete() {
 	for _, name := range s.data.DeletedNames {
-		test.DeleteExpression(s.t, name)
+		test.DeleteExpression(s.t, s.engineName, name)
 	}
 
-	resultMap := test.FetchResult(s.t)
-
+	resultMap := test.FetchResult(s.t, s.engineName)
 	//Validate the Result
 	assert.Equal(s.t, len(s.data.ExpectedOutputMap)-len(s.data.DeletedNames), len(resultMap))
 
 }
 
 func (s *StateMachineEngine) clear() {
-	test.ClearEngine(s.t)
+	test.ClearEngine(s.t, s.engineName)
 }
 
 func (s *StateMachineEngine) RunStrategy() {
+
+	s.addEngine()
+	defer s.deleteEngine()
+	
 	s.addExpression()
 	s.evaluate()
 	s.validate()
 	s.delete()
 	s.clear()
-}
-
-type ConcurrentStateMachine struct {
-	sm []StateMachineEngine
 }

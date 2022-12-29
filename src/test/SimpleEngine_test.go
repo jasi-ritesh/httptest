@@ -8,18 +8,22 @@ import (
 
 func TestArithemeticEngine(t *testing.T) {
 
+	engineName := "Simple_Arithemetic"
+	AddEngine(t, engineName)
+	defer DeleteEngine(t, engineName)
+
 	//Stage-1
 	//Add Expressions to Engine
-	AddExpression(t, &api.Expression{Name: "First", Expr: "2+3"})
-	AddExpression(t, &api.Expression{Name: "Second", Expr: "10%3"})
+	AddExpression(t, engineName, &api.Expression{Name: "First", Expr: "2+3"})
+	AddExpression(t, engineName, &api.Expression{Name: "Second", Expr: "10%3"})
 
 	//Stage-2
 	//Engine is asked to evaluate all Expressions
-	Evaluate(t)
+	Evaluate(t, engineName)
 
 	//Stage-3
 	//Fetch Result From Engine
-	resultMap := FetchResult(t)
+	resultMap := FetchResult(t, engineName)
 
 	//Stage-4
 	//Validate the Result
@@ -36,31 +40,35 @@ func TestArithemeticEngine(t *testing.T) {
 	//Stage-5
 	//Delete the Result
 
-	DeleteExpression(t, "First")
+	DeleteExpression(t, engineName, "First")
 
 	//Stage-6
 	//Fetch Result From Engine
-	resultMap2 := FetchResult(t)
+	resultMap2 := FetchResult(t, engineName)
 	assert.Equal(t, 1, len(resultMap2))
 
-	defer ClearEngine(t)
+	defer ClearEngine(t, engineName)
 }
 
 func TestComparisonEngine(t *testing.T) {
 
+	engineName := "Simple_Arithemetic"
+	AddEngine(t, engineName)
+	defer DeleteEngine(t, engineName)
+
 	//Stage-1
 	//Add Expressions to Engine
-	AddExpression(t, &api.Expression{Name: "First", Expr: "3>2"})
-	AddExpression(t, &api.Expression{Name: "Second", Expr: "4<2"})
-	AddExpression(t, &api.Expression{Name: "Third", Expr: "100<=(50+60)"})
+	AddExpression(t, engineName, &api.Expression{Name: "First", Expr: "3>2"})
+	AddExpression(t, engineName, &api.Expression{Name: "Second", Expr: "4<2"})
+	AddExpression(t, engineName, &api.Expression{Name: "Third", Expr: "100<=(50+60)"})
 
 	//State-2
 	//Engine is asked to evaluate all Expressions
-	Evaluate(t)
+	Evaluate(t, engineName)
 
 	//Stage-3
 	//Fetch Result From Engine
-	resultMap := FetchResult(t)
+	resultMap := FetchResult(t, engineName)
 
 	//Stage-4
 	//Validate the Result
@@ -81,12 +89,12 @@ func TestComparisonEngine(t *testing.T) {
 	//Stage-5
 	//Delete the Result
 
-	DeleteExpression(t, "First")
+	DeleteExpression(t, engineName, "First")
 
 	//Stage-6
 	//Fetch Result From Engine
-	resultMap2 := FetchResult(t)
+	resultMap2 := FetchResult(t, engineName)
 	assert.Equal(t, 2, len(resultMap2))
 
-	defer ClearEngine(t)
+	defer ClearEngine(t, engineName)
 }

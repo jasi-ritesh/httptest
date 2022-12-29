@@ -12,13 +12,16 @@ import (
 )
 
 type RestServer struct {
-	engine *server.Engine
-	router *mux.Router
+	engineMap map[string]*server.Engine
+	router    *mux.Router
 }
 
 func NewServer() *RestServer {
-	s := RestServer{engine: server.NewEngine()}
+	s := RestServer{engineMap: make(map[string]*server.Engine, 0)}
 	s.router = mux.NewRouter().StrictSlash(true)
+
+	s.router.HandleFunc("/engine", s.AddEngine).Methods("POST")
+	s.router.HandleFunc("/engine", s.DeleteEngine).Methods("DELETE")
 
 	s.router.HandleFunc("/engine/expr", s.AddExpression).Methods("POST")
 	s.router.HandleFunc("/engine/evaluate", s.Evaluate).Methods("POST")
@@ -37,35 +40,67 @@ func (s *RestServer) start() {
 	}
 }
 
+func (s *RestServer) AddEngine(w http.ResponseWriter, r *http.Request) {
+	engineName := r.URL.Query().Get("engine")
+	fmt.Println("Add Engine", engineName)
+	engine := server.NewEngine()
+	s.engineMap[engineName] = engine
+}
+
+func (s *RestServer) DeleteEngine(w http.ResponseWriter, r *http.Request) {
+	engineName := r.URL.Query().Get("engine")
+	fmt.Println("Delete Engine", engineName)
+	engine := server.NewEngine()
+	if engine != nil {
+		delete(s.engineMap, engineName)
+	}
+}
+
+func (s *RestServer) GetEngine(name string) *server.Engine {
+	if engine, present := s.engineMap[name]; present {
+		return engine
+	}
+	return nil
+}
+
 func (s *RestServer) AddExpression(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var expr api.Expression
+	engineName := r.URL.Query().Get("engine")
 	json.Unmarshal(reqBody, &expr)
 	fmt.Println("AddExpression", expr)
-	s.engine.AddExpression(expr.Name, expr.Expr)
+	engine := s.GetEngine(engineName)
+	engine.AddExpression(expr.Name, expr.Expr)
 
 }
 
 func (s *RestServer) DeleteExpression(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
+	engineName := r.URL.Query().Get("engine")
 	fmt.Println("Delete Expression", name)
-	s.engine.DeleteExpression(name)
+	engine := s.GetEngine(engineName)
+	engine.DeleteExpression(name)
 
 }
 
 func (s *RestServer) GetResult(w http.ResponseWriter, r *http.Request) {
-	result := s.engine.GetResult()
+	engineName := r.URL.Query().Get("engine")
+	engine := s.GetEngine(engineName)
+	result := engine.GetResult()
 	json.NewEncoder(w).Encode(result)
 
 }
 
 func (s *RestServer) Clear(w http.ResponseWriter, r *http.Request) {
-	s.engine.Clear()
+	engineName := r.URL.Query().Get("engine")
+	engine := s.GetEngine(engineName)
+	engine.Clear()
 }
 
 func (s *RestServer) Evaluate(w http.ResponseWriter, r *http.Request) {
-
-	s.engine.Evaluate()
+	engineName := r.URL.Query().Get("engine")
+	engine := s.GetEngine(engineName)
+	engine.Evaluate()
 
 }
 
