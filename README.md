@@ -12,7 +12,10 @@ Using this API one can add named expression to the Engine.
 Multiple Calls can be made to add multiple expressions to the Engine
 
 /engine/expr -- POST Call at the URL
-{"name":"First","expr":"2+3"}  --JSON data to be sent in body
+{"name":"First","expr":"2+3"}  --JSON data to be sent in body.
+(JSON is an open standard file format and data intrchange 
+format that uses human readable text to store and transmit data objects consisting
+of attribute-value pairs and arrays.)
 
 2. Evaluate
 This API can be used to evaluate all the expressions currently in the Engine
