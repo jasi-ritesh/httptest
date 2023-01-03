@@ -3,7 +3,7 @@ package state
 type DataType int
 
 const (
-	Arithematic DataType = iota //iota is a counter which starts with zero,increases by 1 each line and used with constant
+	Arithematic DataType = iota
 	Comparison
 	Concatenation
 	Combineslice
@@ -11,8 +11,8 @@ const (
 
 func GetFactoryData(dataType DataType) *ExpressionData {
 	switch dataType {
-	case Arithematic:
-		return GetArithematicData()
+	case Arithmetic:
+		return GetArithmeticData()
 	case Comparison:
 		return GetComparisonData()
 	case Concatenation:
@@ -42,7 +42,7 @@ func GetComparisonData() *ExpressionData {
 	return &data
 }
 
-func GetArithematicData() *ExpressionData {
+func GetArithmeticData() *ExpressionData {
 	data := ExpressionData{
 		InputMap: map[string]string{
 			"First":  "2+3",

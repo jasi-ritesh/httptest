@@ -7,12 +7,6 @@ import (
 	"testing"
 )
 
-type ExpressionData struct {
-	InputMap          map[string]string
-	ExpectedOutputMap map[string]string
-	DeletedNames      []string
-}
-
 type StateMachineInterface interface {
 	addEngine()
 	deleteEngine()
@@ -21,6 +15,12 @@ type StateMachineInterface interface {
 	validate()
 	delete()
 	clear()
+}
+
+type ExpressionData struct {
+	InputMap          map[string]string
+	ExpectedOutputMap map[string]string
+	DeletedNames      []string
 }
 
 type StateMachineEngine struct {
@@ -81,7 +81,7 @@ func (s *StateMachineEngine) RunStrategy() {
 
 	s.addEngine()
 	defer s.deleteEngine()
-	
+
 	s.addExpression()
 	s.evaluate()
 	s.validate()
