@@ -39,4 +39,13 @@ This API can be used to Clear all named expression from the Engine
 ```
 
 
+## Running the Program and test cases
+```
+cd httptest
+go run main.go
+
+go clean --testcache & go test -v ./...
+
+```
+
 
