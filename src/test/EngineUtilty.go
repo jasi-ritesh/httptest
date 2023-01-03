@@ -3,6 +3,7 @@ package test
 import (
 	"encoding/json"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"src/server/api"
@@ -10,14 +11,14 @@ import (
 )
 
 func AddEngine(t *testing.T, engineName string) {
-	fmt.Println("Starting Engine ", engineName)
+	log.Println("Starting Engine ", engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine?engine=%s", engineName)
 	code, err := PostData(url, "")
 	assert.Equal(t, http.StatusOK, code)
 	assert.Nil(t, err)
 }
 func DeleteEngine(t *testing.T, engineName string) {
-	fmt.Println("Deleting Engine ", engineName)
+	log.Println("Deleting Engine ", engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine?engine=%s", engineName)
 	code, err := Delete(url)
 	assert.Equal(t, http.StatusOK, code)
@@ -25,7 +26,7 @@ func DeleteEngine(t *testing.T, engineName string) {
 }
 
 func AddExpression(t *testing.T, engineName string, expr *api.Expression) {
-	fmt.Printf("Add Expression %s to Engine %s\n ", expr, engineName)
+	log.Printf("Add Expression %s to Engine %s\n ", expr, engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine/expr?engine=%s", engineName)
 	code, err := PostData(url, MakeJsonString(expr))
 	assert.Equal(t, http.StatusOK, code)
@@ -33,6 +34,7 @@ func AddExpression(t *testing.T, engineName string, expr *api.Expression) {
 }
 
 func DeleteExpression(t *testing.T, engineName string, Name string) {
+	log.Printf("Delete Expression %s to Engine %s\n ", Name, engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine/expr?name=%s&engine=%s", Name, engineName)
 	code, err := Delete(url)
 	assert.Equal(t, http.StatusOK, code)
@@ -40,6 +42,7 @@ func DeleteExpression(t *testing.T, engineName string, Name string) {
 }
 
 func Evaluate(t *testing.T, engineName string) {
+	log.Println("Evaluate Engine ", engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine/evaluate?engine=%s", engineName)
 	code, err := PostData(url, "")
 	assert.Equal(t, http.StatusOK, code)
@@ -47,6 +50,7 @@ func Evaluate(t *testing.T, engineName string) {
 }
 
 func ClearEngine(t *testing.T, engineName string) {
+	log.Println("Clear Engine ", engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine/clear?engine=%s", engineName)
 	code, err := PostData(url, "")
 	assert.Equal(t, http.StatusOK, code)
@@ -54,6 +58,7 @@ func ClearEngine(t *testing.T, engineName string) {
 }
 
 func FetchResult(t *testing.T, engineName string) map[string]string {
+	log.Println("Fetch Result ", engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine/result?engine=%s", engineName)
 	body, code, err := Get(url)
 	assert.Equal(t, http.StatusOK, code)

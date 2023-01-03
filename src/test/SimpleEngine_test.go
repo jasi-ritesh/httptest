@@ -1,9 +1,14 @@
 package test
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/natefinch/lumberjack.v2"
+	"io"
+	"os"
 	"src/server/api"
 	"testing"
+	"time"
 )
 
 func TestArithmeticEngine(t *testing.T) {
@@ -84,4 +89,22 @@ func TestComparisonEngine(t *testing.T) {
 	assert.Equal(t, 2, len(resultMap2))
 
 	defer ClearEngine(t, engineName)
+}
+
+func TestMain(m *testing.M) {
+	// Setup logger
+	lumberjackLogrotate := &lumberjack.Logger{
+		Filename:   "testlog.log",
+		MaxSize:    5,  // Max megabytes before log is rotated
+		MaxBackups: 90, // Max number of old log files to keep
+		MaxAge:     60, // Max number of days to retain log files
+		Compress:   true,
+	}
+
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, TimestampFormat: time.RFC1123Z})
+
+	logMultiWriter := io.MultiWriter(os.Stdout, lumberjackLogrotate)
+	log.SetOutput(logMultiWriter)
+
+	m.Run()
 }
