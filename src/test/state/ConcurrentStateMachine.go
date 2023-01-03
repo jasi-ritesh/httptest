@@ -11,11 +11,11 @@ type ConcurrentStateMachineEngine struct {
 }
 
 func (s *ConcurrentStateMachineEngine) RunStrategy() {
-	wg := &sync.WaitGroup{}
+	wg := &sync.WaitGroup{} // waitgroup is used for synchronisation of Go routines
 	for _, engine := range s.engines {
 		engine.addEngine()
 		wg.Add(1)
-		go func(engine *StateMachineEngine, wg *sync.WaitGroup) {
+		go func(engine *StateMachineEngine, wg *sync.WaitGroup) { //go routines
 			defer wg.Done()
 			engine.addExpression()
 			engine.evaluate()

@@ -10,12 +10,14 @@ import (
 )
 
 func AddEngine(t *testing.T, engineName string) {
+	fmt.Println("Starting Engine ", engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine?engine=%s", engineName)
 	code, err := PostData(url, "")
 	assert.Equal(t, http.StatusOK, code)
 	assert.Nil(t, err)
 }
 func DeleteEngine(t *testing.T, engineName string) {
+	fmt.Println("Deleting Engine ", engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine?engine=%s", engineName)
 	code, err := Delete(url)
 	assert.Equal(t, http.StatusOK, code)
@@ -23,6 +25,7 @@ func DeleteEngine(t *testing.T, engineName string) {
 }
 
 func AddExpression(t *testing.T, engineName string, expr *api.Expression) {
+	fmt.Printf("Add Expression %s to Engine %s\n ", expr, engineName)
 	url := fmt.Sprintf("http://localhost:8000/engine/expr?engine=%s", engineName)
 	code, err := PostData(url, MakeJsonString(expr))
 	assert.Equal(t, http.StatusOK, code)

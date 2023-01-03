@@ -3,7 +3,7 @@ package state
 type DataType int
 
 const (
-	Arithematic DataType = iota
+	Arithematic DataType = iota //iota is a counter which starts with zero,increases by 1 each line and used with constant
 	Comparison
 	Concatenation
 	Combineslice

@@ -2,13 +2,13 @@ package test
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/go-resty/resty/v2"
 	"src/server/api"
+
+	"github.com/go-resty/resty/v2"
 )
 
 func MakeJsonString(expr *api.Expression) string {
-	exprString, _ := json.Marshal(expr)
+	exprString, _ := json.Marshal(expr) //expr will implement the marshal interface to produce a Json string
 	return string(exprString)
 }
 
@@ -35,7 +35,7 @@ func Get(url string) ([]byte, int, error) {
 
 // Delete is a utility method to Delete Rest Data
 func Delete(url string) (int, error) {
-	fmt.Println(url)
+	//fmt.Println(url)
 	client := resty.New()
 	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
