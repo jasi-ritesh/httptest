@@ -3,7 +3,7 @@ package state
 type DataType int
 
 const (
-	Arithematic DataType = iota
+	Arithmetic DataType = iota
 	Comparison
 	Concatenation
 	Combineslice
