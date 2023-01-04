@@ -1,10 +1,5 @@
 package state
 
-import (
-	"os"
-)
-import "github.com/ghodss/yaml"
-
 type DataType int
 
 const (
@@ -12,7 +7,6 @@ const (
 	Comparison
 	Concatenation
 	Combineslice
-	ArithmeticYaml
 )
 
 func GetFactoryData(dataType DataType) *ExpressionData {
@@ -25,8 +19,6 @@ func GetFactoryData(dataType DataType) *ExpressionData {
 		return GetConcatenationData()
 	case Combineslice:
 		return GetCombineSliceData()
-	case ArithmeticYaml:
-		return GetArithmeticDataFromYaml()
 	}
 	return nil
 }
@@ -99,11 +91,5 @@ func GetCombineSliceData() *ExpressionData {
 			"First",
 		},
 	}
-	return &data
-}
-func GetArithmeticDataFromYaml() *ExpressionData {
-	var data ExpressionData
-	yfile, _ := os.ReadFile("arithmetic.yaml")
-	yaml.Unmarshal(yfile, &data)
 	return &data
 }

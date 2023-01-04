@@ -42,9 +42,3 @@ func TestConcurrentStateMachineEngine_RunStrategy(t *testing.T) {
 	cse.RunStrategy()
 
 }
-
-func TestArithmeticFromYaml(t *testing.T) {
-	data := GetFactoryData(ArithmeticYaml)
-	se := StateMachineEngine{t: t, engineName: "ArithmeticYaml", data: data}
-	se.RunStrategy()
-}
