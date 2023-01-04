@@ -12,22 +12,22 @@ import (
 )
 
 func TestArithmeticEngine(t *testing.T) {
-
 	engineName := "Simple_Arithmetic"
+
+	//Stage-1 Create a new Engine
 	AddEngine(t, engineName)
+	//Stage-7 Delete the Engine
 	defer DeleteEngine(t, engineName)
 
-	//Stage-1 Add Expressions to Engine
+	//Stage-2 Add Expressions to Engine
 	AddExpression(t, engineName, &api.Expression{Name: "First", Expr: "2+3"})
 	AddExpression(t, engineName, &api.Expression{Name: "Second", Expr: "10%3"})
 
-	//Stage-2 Engine is asked to evaluate all Expressions
+	//Stage-3 Engine is asked to evaluate all Expressions
 	Evaluate(t, engineName)
 
-	//Stage-3 Fetch Result From Engine
+	//Stage-4 Fetch Result From Engine & Validate
 	resultMap := FetchResult(t, engineName)
-
-	//Stage-4 Validate the Result
 	assert.Equal(t, 2, len(resultMap))
 	//Map Should have a key called First
 	assert.Contains(t, resultMap, "First")
@@ -38,34 +38,34 @@ func TestArithmeticEngine(t *testing.T) {
 	//Map should have the correct value for the key called Second
 	assert.Equal(t, "1", resultMap["Second"])
 
-	//Stage-5  Delete the Result
+	//Stage-5  Delete the Expression and Validate
 	DeleteExpression(t, engineName, "First")
-
-	//Stage-6 Fetch Result From Engine
+	//Fetch Result From Engine
 	resultMap2 := FetchResult(t, engineName)
 	assert.Equal(t, 1, len(resultMap2))
 
-	defer ClearEngine(t, engineName)
+	//Stage-6 Clear the Engine
+	ClearEngine(t, engineName)
 }
 
 func TestComparisonEngine(t *testing.T) {
+	engineName := "Simple_Comparison"
 
-	engineName := "Simple_Arithemetic"
+	//Stage-1 Create a new Engine
 	AddEngine(t, engineName)
+	//Stage-7 Delete the Engine
 	defer DeleteEngine(t, engineName)
 
-	//Stage-1 	//Add Expressions to Engine
+	//Stage-2 Add Expressions to Engine
 	AddExpression(t, engineName, &api.Expression{Name: "First", Expr: "3>2"})
 	AddExpression(t, engineName, &api.Expression{Name: "Second", Expr: "4<2"})
 	AddExpression(t, engineName, &api.Expression{Name: "Third", Expr: "100<=(50+60)"})
 
-	//State-2 	//Engine is asked to evaluate all Expressions
+	//Stage-3 Engine is asked to evaluate all Expressions
 	Evaluate(t, engineName)
 
-	//Stage-3	//Fetch Result From Engine
+	//Stage-4 Fetch Result From Engine & Validate
 	resultMap := FetchResult(t, engineName)
-
-	//Stage-4 	//Validate the Result
 	assert.Equal(t, 3, len(resultMap))
 	//Map Should have a key called First
 	assert.Contains(t, resultMap, "First")
@@ -80,15 +80,13 @@ func TestComparisonEngine(t *testing.T) {
 	//Map should have the correct value for the key called Second
 	assert.Equal(t, "true", resultMap["Third"])
 
-	//Stage-5 	//Delete the Result
-
+	//Stage-5  Delete the Expression and Validate
 	DeleteExpression(t, engineName, "First")
-
-	//Stage-6 	//Fetch Result From Engine
 	resultMap2 := FetchResult(t, engineName)
 	assert.Equal(t, 2, len(resultMap2))
 
-	defer ClearEngine(t, engineName)
+	//Stage-6 Clear the Engine
+	ClearEngine(t, engineName)
 }
 
 func TestMain(m *testing.M) {

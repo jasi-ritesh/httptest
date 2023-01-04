@@ -50,7 +50,7 @@ func (s *RestServer) AddEngine(w http.ResponseWriter, r *http.Request) {
 func (s *RestServer) DeleteEngine(w http.ResponseWriter, r *http.Request) {
 	engineName := r.URL.Query().Get("engine")
 	fmt.Println("Delete Engine", engineName)
-	engine := server.NewEngine()
+	engine := s.GetEngine(engineName)
 	if engine != nil {
 		delete(s.engineMap, engineName)
 	}
