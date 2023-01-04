@@ -58,7 +58,7 @@ func ClearEngine(t *testing.T, engineName string) {
 }
 
 func FetchResult(t *testing.T, engineName string) map[string]string {
-	log.Println("Fetch Result ", engineName)
+
 	url := fmt.Sprintf("http://localhost:8000/engine/result?engine=%s", engineName)
 	body, code, err := Get(url)
 	assert.Equal(t, http.StatusOK, code)
@@ -66,7 +66,7 @@ func FetchResult(t *testing.T, engineName string) map[string]string {
 
 	var resultMap map[string]string
 	jErr := json.Unmarshal(body, &resultMap)
-
+	log.Println("Fetch Result from ", engineName, resultMap)
 	assert.Nil(t, jErr)
 
 	return resultMap
